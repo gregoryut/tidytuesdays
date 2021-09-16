@@ -42,7 +42,7 @@ athletes %>%
   geom_line() +
   labs(x = "",
        y = "",
-       title = "Is the competition getting more competative?") +
+       title = "Is there less participants?") +
   scale_x_continuous(breaks = seq(1980, 2016, 4)) +
   theme(
     plot.background = element_blank(),
@@ -59,6 +59,8 @@ athletes %>%
       family = "sans",
       size = 15,
       hjust = 0.5,
-      color = "midnightblue"
-    )
+      color = "black"
+    ),
+    axis.ticks.y = element_line(lineend = "round"),
+    axis.ticks.x = element_line(lineend = "round")
   )
