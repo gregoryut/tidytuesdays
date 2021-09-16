@@ -33,7 +33,6 @@ athletes %>%
   ) +
   ggeasy::easy_center_title()
 
-
 athletes %>%
   group_by(year, medal) %>%
   summarise(n = n()) %>%
