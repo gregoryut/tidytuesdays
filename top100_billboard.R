@@ -20,7 +20,7 @@ dfm <- billboard %>%
 dfm %>%
   filter(week_position == 1) %>%
   count(song, performer, sort = TRUE) %>%
-  top_n(20) %>%
+  top_n(15) %>%
   ggplot(aes(fct_reorder(performer, n), n, fill = performer)) +
   geom_col() +
   scale_fill_viridis_d() + 
@@ -94,9 +94,3 @@ pca_tidied %>%
 juice(pca_prep)
 
 
-x <- dfm %>%
-  left_join(juice(pca_prep))
-
-colSums(is.na(x))
-
-nrow(x %>% filter(!is.na(PC1)))
