@@ -1,0 +1,86 @@
+---
+title: "Untitled"
+author: "gregory_ut"
+date: "9/22/2021"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+theme_set(theme_minimal())
+```
+
+```{r}
+nominees <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-09-21/nominees.csv')
+
+glimpse(nominees)
+```
+
+```{r}
+nominees %>%
+  count(year, sort = TRUE) %>%
+  arrange(year) %>%
+  ggplot(aes(year, n)) +
+  geom_point(alpha = 0.5, color = "blue") +
+  geom_line(size = .5) +
+  scale_x_continuous(breaks = seq(1955, 2020, 5)) +
+  labs(y = NULL,
+       x = NULL,
+       title = "Number of nominees over the years.") +
+  ggeasy::easy_center_title()
+```
+
+```{r}
+nominees %>%
+  filter(type == "Winner") %>%
+  count(distributor, sort = TRUE) %>%
+  top_n(12) %>%
+  ggplot(aes(fct_reorder(distributor, n), n, fill = distributor)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  coord_flip() +
+  labs(y = NULL,
+       x = "Distributor",
+       title = "Winner Distributors") +
+  theme(plot.title = element_text(family = "sans", face = "bold", hjust = 0.5),
+        legend.position = "none")
+```
+
+```{r}
+nominees %>%
+  filter(type == "Winner") %>%
+  count(producer, sort = TRUE) %>%
+  top_n(12) %>%
+  ggplot(aes(fct_reorder(producer, n), n, fill = producer)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  coord_flip() +
+  labs(y = NULL,
+       x = "Producer",
+       title = "Winner Producers") +
+  theme(plot.title = element_text(family = "sans", face = "bold", hjust = 0.5),
+        legend.position = "none")
+```
+
+```{r}
+nominees %>%
+  filter(year >= 2013 & year <= 2021,
+         type == "Nominee",
+         distributor %in% c("HBO", "HBO Max", "Netflix")) %>%
+  mutate(distributor = case_when(distributor == "HBO Max" ~ "HBO",
+                                 TRUE ~ distributor)) %>%
+  count(year, distributor, sort = TRUE) %>%
+  ggplot(aes(year, n, fill = distributor)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  scale_fill_manual(values = c("salmon", "red")) + 
+  scale_x_continuous(breaks = c(2013:2021)) + 
+  labs(x = NULL,
+       y = NULL,
+       title = "Nominations of HBO & Netflix.",
+       subtitle = "Netflix catched up and beat HBO over the years but not in 2021.") +
+  theme(legend.position = "bottom",
+        plot.title = element_text(hjust = 0.5, family = "sans"),
+        plot.subtitle = element_text(size = 10, family = "sans"),
+        panel.grid = element_blank())
+  
+```
+
