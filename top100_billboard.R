@@ -45,11 +45,13 @@ df_tidy <- dfm %>%
   filter(year > 2000) %>%
   select(performer, week_id, spotify_genre, danceability:tempo,-mode) %>%
   mutate(
-    genre = str_remove_all(spotify_genre, "\\['|'\\]"),
+    genre = str_remove_all(spotify_genre, "\\[*'|'*\\]"),
     # got to clean genre
-    genre = replace_na(genre, "unknown")
-  ) %>%
-  select(genre)
+    genre = replace_na(genre, "unknown"),
+  ) %>% 
+  select(-spotify_genre) %>% 
+  separate(genre, c("one", "two", "three", "four"), sep = ",", fill = "left", extra = "merge") %>%
+  count(one, two, three, four, sort = TRUE)
 
 rec <- recipe(~., data = df_tidy) %>%
   update_role(spotify_genre, performer, week_id, new_role = "id") %>%
