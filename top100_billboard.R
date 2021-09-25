@@ -41,6 +41,8 @@ dfm %>%
   labs(title = "Tempo throughout years") +
   ggeasy::easy_center_title()
 
+
+# working on it REGEX 
 df_tidy <- dfm %>%
   filter(year > 2000) %>%
   select(performer, week_id, spotify_genre, danceability:tempo,-mode) %>%
@@ -51,6 +53,10 @@ df_tidy <- dfm %>%
   ) %>% 
   select(-spotify_genre) %>% 
   separate(genre, c("one", "two", "three", "four"), sep = ",", fill = "left", extra = "merge") %>%
+  mutate(one = replace_na(one, "none"),
+         two = replace_na(two, "none"),
+         three = replace_na(three, "none"),
+         four = replace_na(four, "none")) %>%
   count(one, two, three, four, sort = TRUE)
 
 rec <- recipe(~., data = df_tidy) %>%
