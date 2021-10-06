@@ -3,8 +3,11 @@ library(janitor)
 theme_set(theme_minimal())
 
 
-# read in the data 
-nurses <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-05/nurses.csv')
+# read in the data
+nurses <-
+  readr::read_csv(
+    'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-05/nurses.csv'
+  )
 
 nurses <- nurses %>%
   clean_names()
@@ -21,9 +24,21 @@ nurses %>%
   geom_line() +
   scale_x_continuous(breaks = seq(2000, 2020, 2)) +
   scale_y_continuous(labels = scales::comma) +
-  labs(title = "How many Nurses are emplyed over the years?",
-       x = "Year",
-       y = "Total Employed") +
+  geom_vline(xintercept = 2008,
+             color = "grey",
+             alpha = 0.5) +
+  geom_text(
+    aes(x = 2008, label = "Global Financial Crisis", y = 300000),
+    colour = "grey",
+    angle = 1,
+    size = 4
+  ) +
+  labs(
+    title = "How many Nurses are emplyed over the years?",
+    x = "Year",
+    y = "Total Employed",
+    subtitle = "vertical line is financial crisis."
+  ) +
   theme(plot.title = element_text(hjust = .5))
 
 
@@ -36,11 +51,20 @@ nurses %>%
   geom_point(alpha = 0.3) +
   geom_line() +
   scale_x_continuous(breaks = seq(2000, 2020, 2)) +
-  scale_y_continuous(labels = scales::dollar) + 
+  scale_y_continuous(labels = scales::dollar) +
+  geom_vline(xintercept = 2008,
+             color = "grey",
+             alpha = 0.5) + 
+  geom_text(
+    aes(x = 2008, label = "Global Financial Crisis", y = 50),
+    colour = "grey",
+    angle = 1,
+    size = 4
+  ) +
   labs(title = "Median hourly salary of Nurses over the years?",
        x = "Year",
        y = "Median Hourly Salary") +
-  theme(plot.title = element_text(hjust = .5)) 
+  theme(plot.title = element_text(hjust = .5))
 
 
 nurses %>%
@@ -49,6 +73,15 @@ nurses %>%
   geom_line() +
   expand_limits(y = 0) +
   scale_y_continuous(labels = scales::comma_format()) +
+  geom_vline(xintercept = 2008,
+             color = "grey",
+             alpha = 0.5) + 
+  geom_text(
+    aes(x = 2008, label = "Global Financial Crisis", y = 300000),
+    colour = "grey",
+    angle = 1,
+    size = 4
+  ) +
   labs(x = "Year",
        y = "# nurses employed")
 
@@ -60,25 +93,30 @@ nurses %>%
   geom_line() +
   expand_limits(y = 0) +
   scale_y_continuous(labels = scales::dollar_format()) +
+  geom_vline(xintercept = 2008,
+             color = "grey",
+             alpha = 0.5) + 
+  geom_text(
+    aes(x = 2008, label = "Global Financial Crisis", y = 100000),
+    colour = "grey",
+    angle = 1,
+    size = 4
+  )
   labs(x = "Year",
        y = "Median Salary")
 
 
-# make a map 
+# make a map
 nurses %>%
   filter(year == 2020) %>%
   mutate(state = str_to_lower(state)) %>%
   inner_join(map_data("state"), by = c(state = "region")) %>%
   ggplot(aes(long, lat, group = annual_salary_median, fill = annual_salary_median)) +
   geom_polygon() +
-  coord_map() + 
+  coord_map() +
   scale_fill_continuous(labels = scales::dollar_format(), type = "viridis") +
   labs(title = "Median Annual Salary of Registered Nurses USA",
        fill = "Annual Salary",
        subtitle = "Salary in 2020") +
-  theme_void() + 
+  theme_void() +
   theme(plot.title = element_text(hjust = 0.5))
-  
-  
-
-
