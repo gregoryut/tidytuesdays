@@ -2,6 +2,7 @@ library(tidyverse)
 library(janitor)
 theme_set(theme_minimal())
 
+
 # read in the data 
 nurses <- readr::read_csv('https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2021/2021-10-05/nurses.csv')
 
@@ -11,13 +12,15 @@ nurses <- nurses %>%
 glimpse(nurses)
 
 nurses %>%
-  group_by(year) %>%
+  filter(state %in% c("New York", "California", "Texas", "Georgia", "Florida")) %>%
+  group_by(year, state) %>%
   summarise(tot_emp = sum(total_employed_rn)) %>%
   filter(!is.na(tot_emp)) %>%
-  ggplot(aes(year, tot_emp)) +
+  ggplot(aes(year, tot_emp, color = state, group = state)) +
   geom_point(alpha = 0.3) +
-  geom_line(color = "midnightblue") +
+  geom_line() +
   scale_x_continuous(breaks = seq(2000, 2020, 2)) +
+  scale_y_continuous(labels = scales::comma) +
   labs(title = "How many Nurses are emplyed over the years?",
        x = "Year",
        y = "Total Employed") +
@@ -25,18 +28,20 @@ nurses %>%
 
 
 nurses %>%
-  group_by(year) %>%
+  filter(state %in% c("New York", "California", "Texas", "Georgia", "Florida")) %>%
+  group_by(year, state) %>%
   summarise(med_wage = mean(hourly_wage_median)) %>%
   filter(!is.na(med_wage)) %>%
-  ggplot(aes(year, med_wage)) +
+  ggplot(aes(year, med_wage, color = state, group = state)) +
   geom_point(alpha = 0.3) +
-  geom_line(color = "midnightblue") +
+  geom_line() +
   scale_x_continuous(breaks = seq(2000, 2020, 2)) +
   scale_y_continuous(labels = scales::dollar) + 
   labs(title = "Median hourly salary of Nurses over the years?",
        x = "Year",
        y = "Median Hourly Salary") +
   theme(plot.title = element_text(hjust = .5)) 
+
 
 nurses %>%
   filter(state %in% c("New York", "California", "Texas", "Georgia", "Florida")) %>%
@@ -47,14 +52,6 @@ nurses %>%
   labs(x = "Year",
        y = "# nurses employed")
 
-nurses %>%
-  filter(state %in% c("New York", "California", "Texas", "Georgia", "Florida")) %>%
-  ggplot(aes(year, hourly_wage_median, color = state)) +
-  geom_line() +
-  expand_limits(y = 0) +
-  scale_y_continuous(labels = scales::dollar_format()) +
-  labs(x = "Year",
-       y = "Median Wage")
 
 
 nurses %>%
