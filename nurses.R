@@ -77,25 +77,11 @@ nurses %>%
   coord_map() + 
   scale_fill_continuous(labels = scales::dollar_format(), type = "viridis") +
   labs(title = "Median Annual Salary of Registered Nurses USA",
-       fill = "Annual Salary") +
+       fill = "Annual Salary",
+       subtitle = "Salary in 2020") +
   theme_void() + 
   theme(plot.title = element_text(hjust = 0.5))
   
   
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
