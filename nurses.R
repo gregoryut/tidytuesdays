@@ -17,7 +17,7 @@ glimpse(nurses)
 nurses %>%
   filter(state %in% c("New York", "California", "Texas", "Georgia", "Florida")) %>%
   group_by(year, state) %>%
-  summarise(tot_emp = sum(total_employed_rn)) %>%
+  summarise(tot_emp = sum(total_employed_rn), .groups = "drop") %>%
   filter(!is.na(tot_emp)) %>%
   ggplot(aes(year, tot_emp, color = state, group = state)) +
   geom_point(alpha = 0.3) +
@@ -45,7 +45,7 @@ nurses %>%
 nurses %>%
   filter(state %in% c("New York", "California", "Texas", "Georgia", "Florida")) %>%
   group_by(year, state) %>%
-  summarise(med_wage = mean(hourly_wage_median)) %>%
+  summarise(med_wage = mean(hourly_wage_median), .groups = "drop") %>%
   filter(!is.na(med_wage)) %>%
   ggplot(aes(year, med_wage, color = state, group = state)) +
   geom_point(alpha = 0.3) +
@@ -110,7 +110,7 @@ nurses %>%
 nurses %>%
   filter(year == 2020) %>%
   mutate(state = str_to_lower(state)) %>%
-  inner_join(map_data("state"), by = c(state = "region")) %>%
+  inner_join(map_data("state"), by = c("state" = "region")) %>%
   ggplot(aes(long, lat, group = annual_salary_median, fill = annual_salary_median)) +
   geom_polygon() +
   coord_map() +
