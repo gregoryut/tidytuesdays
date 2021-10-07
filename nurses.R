@@ -67,24 +67,6 @@ nurses %>%
   theme(plot.title = element_text(hjust = .5))
 
 
-nurses %>%
-  filter(state %in% c("New York", "California", "Texas", "Georgia", "Florida")) %>%
-  ggplot(aes(year, total_employed_rn, color = state)) +
-  geom_line() +
-  expand_limits(y = 0) +
-  scale_y_continuous(labels = scales::comma_format()) +
-  geom_vline(xintercept = 2008,
-             color = "grey",
-             alpha = 0.5) + 
-  geom_text(
-    aes(x = 2008, label = "Global Financial Crisis", y = 300000),
-    colour = "grey",
-    angle = 1,
-    size = 4
-  ) +
-  labs(x = "Year",
-       y = "# nurses employed")
-
 
 
 nurses %>%
