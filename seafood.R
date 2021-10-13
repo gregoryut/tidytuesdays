@@ -66,6 +66,7 @@ stock %>%
   scale_fill_manual(values = c("salmon", "midnightblue")) +
   geom_hline(yintercept = 0, color = "grey") +
   theme_minimal() +
+  theme(panel.grid = element_blank()) +
   labs(
     x = "Year",
     y = "Percent Overexploited/Sustainable",
