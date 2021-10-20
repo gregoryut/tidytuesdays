@@ -18,7 +18,7 @@ athletes %>%
 athletes %>%
   count(gender, medal, abb) %>%
   arrange(desc(n)) %>%
-  top_n(25) %>%
+  top_n(15) %>%
   ggplot(aes(gender, n, fill = medal)) +
   geom_bar(stat = "identity", position = "dodge") +
   theme_minimal() +
