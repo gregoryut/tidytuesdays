@@ -15,8 +15,7 @@ top100 <- pumpkins %>%
   separate(id, into = c("year", "type"), sep = "-") %>%
   filter(!type %in% c("T", "L", "W")) %>%
   drop_na(place) %>%
-  mutate(weight_lbs = parse_number(weight_lbs),
-         place = parse_number(place)) %>%
+  mutate(across(c(weight_lbs, place), parse_number)) %>%
   filter(place <= 100)
 
 top100 %>%
@@ -82,3 +81,19 @@ clean_pump2 %>%
   coord_flip() + 
   facet_wrap(~place) +
   theme_minimal()
+
+
+pumpkins %>%
+  filter(!place %in% c("EXH", "DMG")) %>%
+  separate(id, into = c("year", "type"), sep = "-") %>%
+  filter(type == "P") %>%
+  mutate(country = fct_lump(country, 10)) %>%
+  mutate(across(c(weight_lbs, place), parse_number)) %>%
+  ggplot(aes(fct_reorder(country, weight_lbs), weight_lbs, color = country)) +
+  geom_boxplot(outlier.color = NA) +
+  geom_jitter(alpha = 0.1, width = 0.15) + 
+  theme_minimal() +
+  labs(x = NULL, 
+       y = "Weight (Pounds)") + 
+  theme(legend.position = "None")
+
