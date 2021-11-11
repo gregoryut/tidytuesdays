@@ -1,9 +1,9 @@
 #remotes::install_github("afrimapr/afrilearndata")
-
+#devtools::install_github("yutannihilation/ggsflabel")
 library(afrilearndata)
 library(tidyverse)
 library(patchwork)
-
+library(ggsflabel)
 
 africapitals
 afriairports
@@ -28,6 +28,9 @@ pop2020 <- ggplot() +
     color = "darkorange",
     aes(size = pop)
   ) +
+  geom_sf_label_repel(data = africapitals, aes(label = capitalname), 
+                      color = "grey10", family = "prata", size = 2.5, nudge_x = -0.5,
+                      segment.color = "white", segment.size = 0.5) + 
   labs(x = NULL,
        y = NULL,
        size = "City Population",
@@ -61,7 +64,9 @@ pop2000 <- afripop2000 %>%
     color = "darkorange",
     aes(size = pop)
   ) +
-  #geom_text(data = africapitals, aes(x, y, label = capitalname)) + 
+  geom_sf_label_repel(data = africapitals, aes(label = capitalname), 
+                      color = "grey10", family = "prata", size = 2.5, nudge_x = -0.5,
+                      segment.color = "white", segment.size = 0.5) + 
   labs(x = NULL,
        y = NULL,
        size = "City Population",
