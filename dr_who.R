@@ -53,7 +53,7 @@ episodes %>%
         plot.title = element_text(hjust = 0.5, face = "bold", size = 16),
         legend.position = "none")
 
-# barplot of mean rating by year
+# barplot of mean rating by season
 imdb %>%
   mutate(air_date = dmy(air_date),
          year = year(air_date)) %>%
