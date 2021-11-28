@@ -5,7 +5,7 @@ library(tidyverse)
 library(patchwork)
 library(ggsflabel)
 library(scico)
-
+options(scipen = 10000)
 
 africa_pop <- afripop2020 %>%
   as.data.frame(xy = TRUE) %>%
@@ -24,8 +24,8 @@ pop2020 <- ggplot() +
   labs(fill = "Population") +
   geom_sf(
     data = africapitals,
-    alpha = 0.3,
-    color = "darkorange",
+    alpha = 0.5,
+    color = "white",
     aes(size = (pop))
   ) +
   #geom_sf_label_repel(data = africapitals, aes(label = capitalname), 
@@ -55,13 +55,13 @@ pop2000 <- afripop2000 %>%
   scale_fill_scico(direction = -1, 
                    trans = "pseudo_log",
                    palette = "lajolla", 
-                   breaks = c(0, 100, 1000, 10000, 20000)) +
+                   breaks = c(0, 100, 1000, 5000, 10000)) +
   theme_minimal() +
   labs(fill = "Population") +
   geom_sf(
     data = africapitals,
-    alpha = 0.3,
-    color = "darkorange",
+    alpha = 0.5,
+    color = "white",
     aes(size = pop)
   ) +
   #geom_sf_label_repel(data = africapitals, aes(label = capitalname), 
