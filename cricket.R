@@ -16,7 +16,7 @@ matches %>%
   filter(winner %in% c("South Africa",
                        "Pakistan", 
                        "India", 
-                       "Austrialia", 
+                       "Australia", 
                        "England",
                        "Sri Lanka",
                        "New Zealand",
