@@ -43,3 +43,28 @@ matches %>%
   theme(panel.grid = element_blank(),
         plot.title = element_text(hjust = 0.5, size = 16, face = "bold"))
   
+
+
+matches %>%
+  separate(match_date, c("month_day", "year"), sep = ",") %>%
+  mutate(year = str_trim(year)) %>%
+  group_by(winner, year) %>%
+  summarise(n = n()) %>%
+  filter(winner %in% c("South Africa",
+                       "Pakistan", 
+                       "India", 
+                       "Australia", 
+                       "England",
+                       "Sri Lanka",
+                       "New Zealand",
+                       "West Indies",
+                       "Zimbabwe")) %>%
+  ggplot(aes(fct_reorder(winner, n), n, fill = winner)) +
+  geom_col(alpha = 0.6) +
+  facet_wrap(~year) +
+  coord_flip() +
+  labs(x = NULL,
+       y = "Number of Wins",
+       title = "Which Countries Have The Most Wins by Year?") +
+  theme(panel.grid = element_blank(),
+        plot.title = element_text(hjust = 0.5, size = 16, face = "bold"))
