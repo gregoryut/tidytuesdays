@@ -1,0 +1,89 @@
+---
+title: "Untitled"
+author: "GU"
+date: "6/25/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(sf)
+library(ggthemes)
+theme_set(theme_map())
+```
+
+```{r}
+
+# Get the Data
+individuals <- readr::read_csv(
+    'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-23/individuals.csv'
+  )
+
+locations <- readr::read_csv(
+    'https://raw.githubusercontent.com/rfordatascience/tidytuesday/master/data/2020/2020-06-23/locations.csv'
+  )
+
+glimpse(individuals)
+glimpse(locations)
+
+
+loct <- individuals %>%
+  left_join(locations, by = "animal_id") %>%
+  st_as_sf(coords = c("longitude", "latitude")) %>%
+  st_simplify(dTolerance = 0.01) # supposed to make plotting many points faster
+
+# quick plot of sampled points
+loct %>%
+  slice(1:15000) %>%
+  ggplot() +
+  geom_sf()
+
+
+# get shp files for USA and Canada
+can <- raster::getData("GADM", country = "canada", level = 1)
+usa <- raster::getData("GADM", country = "usa", level = 1)
+
+
+can <- can %>%
+  st_as_sf() %>%
+  st_simplify(dTolerance = 0.01)
+
+usa <- usa %>%
+  st_as_sf() %>%
+  st_simplify(dTolerance = 0.01)
+
+
+## create new projection for USA/CANADA
+np <- st_crs("+proj=poly +lat_0=0 +lon_0=-100 +x_0=0
+            +y_0=0 +ellps=WGS84 +datum=WGS84 +units=m +no_defs")
+
+
+## Project other layers
+can1Pr <- st_transform(can, np)
+us1Pr <- st_transform(usa, np)
+
+loct <- loct %>%
+  st_set_crs(4326) %>%
+  st_transform(np)
+
+
+uscan <- can1Pr %>%
+  select(1) %>%
+  bind_rows(us1Pr %>% filter(NAME_1 != "Hawaii"))
+
+
+# takes a while to plot
+uscan %>%
+  ggplot() +
+  geom_sf(fill = "gray", size = 0.5) +
+  geom_sf(data = loct, aes(color = study_site.x, alpha = 0.2)) +
+  theme_map() +
+  labs(title = "USA/Canada") +
+  theme(legend.position = "none",
+        plot.title = element_text(family = "sans", colour = "darkblue", size = 12, hjust = 0.5),
+        plot.background = element_rect(fill = "lightblue"))
+
+
+```
+
