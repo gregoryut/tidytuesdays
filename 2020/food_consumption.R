@@ -37,5 +37,3 @@ food_consumption %>%
   theme_minimal() +
   theme(panel.grid = element_blank(),
         plot.title = element_text(hjust = 0.5, face = 'bold', size = 16))
-
-
