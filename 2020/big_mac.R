@@ -58,6 +58,3 @@ big_mac %>%
         axis.text.y = element_text(face = "bold", size = 12),
         axis.text.x = element_text(face = "bold", size = 12))
 
-
-
-
