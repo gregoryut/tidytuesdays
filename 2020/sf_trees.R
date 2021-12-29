@@ -27,7 +27,7 @@ trees <- sf_trees %>%
          longitude < 37.55) %>%
   drop_na(longitude, latitude) %>%
   st_as_sf(., coords = c("longitude", "latitude")) %>%
-  st_set_crs(st_crs(sf_erase))
+  st_set_crs(st_crs(tracts))
 
 # join
 sft <- tracts %>%
