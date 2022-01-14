@@ -138,3 +138,51 @@ sts %>%
         axis.text.y = element_blank(),
         plot.title = element_text(hjust = 0.5, size = 15, face = 'bold'))
 
+# same thing but for colonies lost
+cc2 <- colony %>%
+  group_by(year, state) %>%
+  summarise(colony_lost_pct = mean(colony_lost_pct, na.rm = TRUE), .groups = "drop") %>%
+  pivot_wider(names_from = year,
+              values_from = colony_lost_pct) %>%
+  janitor::clean_names() %>%
+  mutate(diff = x2020 - x2015) %>%
+  mutate(diff = replace_na(diff, 0)) %>%
+  select(state, diff)
+
+sts %>%
+  inner_join(cc2, by = c("NAME" = "state")) %>%
+  filter(NAME != "Hawaii") %>% # for nicer visual
+  ggplot(aes(fill = diff)) +
+  geom_sf(lwd = 0.3) +
+  scale_fill_gradient2(labels = scales::comma) +
+  theme_minimal() +
+  labs(title = "Average Percent % Loss/Gain Bee Colonies From 2020 to 2015.") +
+  theme(panel.grid = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        plot.title = element_text(hjust = 0.5, size = 15, face = 'bold'))
+
+# same thing but for 
+ss <- stressor %>%
+  group_by(year, state, stressor) %>%
+  summarise(stress_pct = mean(stress_pct, na.rm = TRUE), .groups = "drop") %>%
+  filter(stressor == "Pesticides") %>%
+  pivot_wider(names_from = year,
+              values_from = stress_pct) %>%
+  janitor::clean_names() %>%
+  mutate(diff = x2020 - x2015) %>%
+  mutate(diff = replace_na(diff, 0)) %>%
+  select(state, diff)
+
+sts %>%
+  inner_join(ss, by = c("NAME" = "state")) %>%
+  filter(NAME != "Hawaii") %>% # for nicer visual
+  ggplot(aes(fill = diff)) +
+  geom_sf(lwd = 0.3) +
+  scale_fill_gradient2(labels = scales::comma) +
+  theme_minimal() +
+  labs(title = "Average Percent % Of Stressor from Pesticides \nOn Bee Colonies From 2020 to 2015.") +
+  theme(panel.grid = element_blank(),
+        axis.text.x = element_blank(),
+        axis.text.y = element_blank(),
+        plot.title = element_text(hjust = 0.5, size = 15, face = 'bold'))
