@@ -6,19 +6,16 @@ glimpse(freedom)
 
 
 freedom %>%
-  filter(country %in% c("Afghanistan",
-                        "Poland",
-                        "Ukraine", 
-                        "Bulgaria",
+  filter(country %in% c("Ukraine",
                         "Belarus",
                         "Russian Federation")) %>%
   pivot_longer(c(CL, PR)) %>%
   mutate(name = case_when(name %in% "CL" ~ "Civil Liberites",
                           name %in% "PR" ~ "Political Rights",
                           TRUE ~ "ERROR")) %>%
-  ggplot(aes(year, value, color = country)) +
+  ggplot(aes(year, -value, color = country)) +
   geom_line(size = 1.2) +
-  facet_wrap(country~name, scales = "free") +
+  facet_wrap(country~name) +
   scale_color_manual(values = c("#3900b3",
                                 "#714dbf",
                                 "#9e6b90",
@@ -32,20 +29,21 @@ freedom %>%
         legend.position = 'none')
 
 
+
+
 freedom %>%
-  filter(country %in% c("Afghanistan",
-                        "Poland",
+  filter(country %in% c(
                         "Ukraine", 
-                        "Bulgaria",
                         "Belarus",
-                        "Russian Federation")) %>%
+                        "Russian Federation"
+                        )) %>%
   pivot_longer(c(CL, PR)) %>%
   mutate(name = case_when(name %in% "CL" ~ "Civil Liberites",
                           name %in% "PR" ~ "Political Rights",
                           TRUE ~ "ERROR")) %>%
   group_by(country, name) %>%
   summarise(mean_value = mean(value, na.rm = TRUE)) %>%
-  ggplot(aes(country, mean_value, fill = name)) +
+  ggplot(aes(country, -mean_value, fill = name)) +
   geom_bar(stat = "identity", position = "dodge") +
   scale_fill_manual(values = c("#0040ff", "#00ffff")) +
   theme_minimal() +
@@ -58,17 +56,15 @@ freedom %>%
 
 
 freedom %>%
-  filter(country %in% c("Afghanistan",
-                        "Poland",
+  filter(country %in% c(
                         "Ukraine", 
-                        "Bulgaria",
                         "Belarus",
                         "Russian Federation")) %>%
   pivot_longer(c(CL, PR)) %>%
   mutate(name = case_when(name %in% "CL" ~ "Civil Liberites",
                           name %in% "PR" ~ "Political Rights",
                           TRUE ~ "ERROR")) %>%
-  ggplot(aes(country, value, color = name)) +
+  ggplot(aes(country, -value, color = name)) +
   geom_boxplot() +
   scale_color_manual(values = c("#23ccff", "#ffc800")) +
   theme_minimal() +
@@ -80,10 +76,8 @@ freedom %>%
 
 
 freedom %>%
-  filter(country %in% c("Afghanistan",
-                        "Poland",
+  filter(country %in% c(
                         "Ukraine", 
-                        "Bulgaria",
                         "Belarus",
                         "Russian Federation")) %>%
   count(country, Status) %>%
