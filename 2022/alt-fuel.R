@@ -15,6 +15,11 @@ cnts <- tigris::counties(cb = TRUE, year = 2019) %>%
   filter(county < 60,
          !county %in% c(15, 02))
 
+states <- tigris::states(cb = TRUE) %>%
+  mutate(county = as.numeric(STATEFP)) %>%
+  filter(county < 60,
+         !county %in% c(15, 02))
+
 # convert stations file to spatial format
 stations_sp <- stations %>%
   st_as_sf(., coords = c("X", "Y"), crs = st_crs(cnts))
@@ -45,4 +50,22 @@ tm_shape(stations_cnts) +
           n = 6, 
           style = "jenks") +
   tm_borders(lwd = 0.2)
+
+# state level map
+stations_cnts2 <- states %>%
+  st_join(stations_sp,
+          join = st_contains) %>%
+  group_by(STATEFP) %>%
+  summarise(count = n())
+
+stations_cnts2 %>%
+  ggplot(aes(fill = count)) +
+  geom_sf(lwd = 0.1) +
+  #scale_fill_viridis_c(option = "H") +
+  scale_fill_gradient(low = "white", high = "blue") +
+  coord_sf(crs = 5070) +
+  labs(title = "Alternative Fuel Stations") +
+  theme_minimal() +
+  theme(panel.grid = element_blank(),
+        plot.title = element_text(hjust = 0.5, face = 'bold', size = 18)) 
 
