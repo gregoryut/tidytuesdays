@@ -21,8 +21,10 @@ sp_tickets <- pa %>%
   group_by(NAME) %>%
   summarise(tot_fine = sum(fine, na.rm = TRUE))
 
+pa <- sp_tickets %>%
+  st_union()
 
-sp_tickets %>%
-  ggplot(aes(fill = tot_fine)) +
-  geom_sf(lwd = 0.04) +
+ggplot() +
+  geom_sf(data = sp_tickets, aes(fill = tot_fine), lwd = 0.04) +
+  geom_sf(data = pa, alpha = 0) + 
   scale_fill_gradient2()
