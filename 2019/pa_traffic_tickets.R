@@ -39,7 +39,7 @@ sp_tickets %>%
   ggplot() +
   geom_sf(aes(fill = tot_fine), lwd = 0.04) +
   scale_fill_gradientn(colors = c("#f1eef6", "#d4b9da", "#c994c7", "#df65b0", "#dd1c77", "#980043")) +
-  labs(title = glue::glue("Traffic Tickets Value USD From \n{max(sf_tickets$issue_datetime, na.rm = TRUE)} to  {min(sf_tickets$issue_datetime, na.rm = TRUE)}"),
+  labs(title = glue::glue("Traffic Tickets Value USD From \n{min(sf_tickets$issue_datetime, na.rm = TRUE)} to  {max(sf_tickets$issue_datetime, na.rm = TRUE)}"),
        fill = "Total USD")+
   theme(plot.title = element_text(hjust = 0.5, size = 16, face = 'bold'),
         panel.grid = element_blank())
